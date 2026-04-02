@@ -361,10 +361,10 @@ export default function CallPage() {
   return (
     <div className="fixed inset-0 bg-[#0A0A0A] flex flex-col items-center justify-center overflow-hidden">
       {/* Multi-layer background */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 pointer-events-none">
         {/* Grid */}
         <div
-          className="absolute inset-0 opacity-[0.02]"
+          className="absolute inset-0 opacity-[0.02] pointer-events-none"
           style={{
             backgroundImage:
               'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
@@ -373,7 +373,7 @@ export default function CallPage() {
         />
         {/* Dynamic glow */}
         <motion.div
-          className="absolute inset-0 transition-all duration-1000"
+          className="absolute inset-0 transition-all duration-1000 pointer-events-none"
           animate={{
             background: `radial-gradient(circle at 50% 40%, ${
               callState.isSpeaking === 'ai'
@@ -524,7 +524,7 @@ export default function CallPage() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={requestMicPermission}
-                    className="w-20 h-20 rounded-full bg-gradient-to-br from-[#4D9FFF] to-[#0066FF] flex items-center justify-center shadow-lg shadow-[rgba(77,159,255,0.3)]"
+                    className="relative z-50 cursor-pointer pointer-events-auto w-20 h-20 rounded-full bg-gradient-to-br from-[#4D9FFF] to-[#0066FF] flex items-center justify-center shadow-lg shadow-[rgba(77,159,255,0.3)]"
                     id="mic-permission-button"
                   >
                     <Mic className="w-8 h-8 text-white" />
