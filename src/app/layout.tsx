@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Drill — The AI That Won't Let You Slack Off",
+  title: "Drill - The AI That Won't Let You Slack Off",
   description:
     "Drill is your AI accountability partner that calls you every day, remembers everything you said, and holds you to it. No excuses.",
   keywords: ["AI", "accountability", "productivity", "voice AI", "ElevenLabs", "daily tasks", "habit tracker"],

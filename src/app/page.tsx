@@ -450,9 +450,15 @@ export default function LandingPage() {
               key={feature.title}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
+              whileHover={{ 
+                y: -8, 
+                transition: { duration: 0.2 },
+                boxShadow: `0 20px 40px -20px ${feature.color}40`,
+                borderColor: `${feature.color}40`
+              }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="group glass-card p-6 hover:border-[rgba(255,255,255,0.15)] transition-all duration-300 relative overflow-hidden"
+              className="group glass-card p-6 transition-all duration-300 relative overflow-hidden cursor-default"
             >
               {/* Hover gradient */}
               <div
