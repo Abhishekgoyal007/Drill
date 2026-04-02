@@ -183,41 +183,6 @@ export default function DashboardPage() {
                   : 'Time to start your streak. No excuses.'}
               </p>
             </div>
-
-            {/* DEMO TRIGGER CARD */}
-            <motion.div 
-              whileHover={{ scale: 1.02 }}
-              className="relative p-4 rounded-3xl bg-gradient-to-br from-blue-600/20 to-blue-900/10 border border-blue-500/20 backdrop-blur-xl overflow-hidden group cursor-pointer"
-              onClick={() => {
-                // Vibration physics
-                if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 500]);
-                
-                // Fire notification after 3s delay for "magic" effect
-                setTimeout(() => {
-                  if ('Notification' in window && Notification.permission === 'granted') {
-                    new Notification("It's Drill Time! 🥊", {
-                      body: `Morning Abhishek. Ready to ship your goals for today?`,
-                      icon: '/icons/icon-192.png',
-                      tag: 'drill-call'
-                    });
-                  }
-                  router.push('/call');
-                }, 3000);
-              }}
-            >
-              <div className="absolute top-0 right-0 p-3 opacity-20 group-hover:opacity-40 transition-opacity">
-                <Phone className="w-12 h-12 text-blue-400 rotate-12" />
-              </div>
-              <div className="relative z-10 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
-                  <Zap className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-white font-bold text-sm">Simulator Trigger</h3>
-                  <p className="text-[10px] text-blue-400 font-bold uppercase tracking-wider">Demo morning call</p>
-                </div>
-              </div>
-            </motion.div>
           </div>
 
         {/* Loading */}
