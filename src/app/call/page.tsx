@@ -104,11 +104,14 @@ export default function CallPage() {
   const startCall = useCallback(async () => {
     if (!user || !profile) return;
 
+    if (micStatus === 'denied') {
+      startDemoCall();
+      return;
+    }
+
     // Request mic if not yet granted
     if (micStatus !== 'granted') {
       await requestMicPermission();
-      // If still not granted after request, don't proceed
-      if (micStatus === 'denied') return;
     }
 
     setCallState((prev) => ({ ...prev, status: 'connecting' }));
@@ -541,7 +544,7 @@ export default function CallPage() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={startCall}
-                    className="w-20 h-20 rounded-full bg-gradient-to-br from-[#00FF94] to-[#00CC75] flex items-center justify-center shadow-lg shadow-[rgba(0,255,148,0.3)]"
+                    className="relative z-50 cursor-pointer pointer-events-auto w-20 h-20 rounded-full bg-gradient-to-br from-[#00FF94] to-[#00CC75] flex items-center justify-center shadow-lg shadow-[rgba(0,255,148,0.3)]"
                     id="start-call-button"
                   >
                     <Phone className="w-8 h-8 text-black" />
