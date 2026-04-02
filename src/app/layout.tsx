@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth-context";
 import { PWARegister } from "@/components/PWARegister";
+import { BackgroundScheduler } from "@/components/BackgroundScheduler";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -56,7 +57,10 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
       </head>
       <body className="min-h-screen bg-[#0A0A0A] text-white font-sans">
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          {children}
+          <BackgroundScheduler />
+        </AuthProvider>
         <PWARegister />
       </body>
     </html>

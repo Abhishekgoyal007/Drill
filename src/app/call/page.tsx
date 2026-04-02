@@ -6,7 +6,7 @@ import { Phone, PhoneOff, Mic, MicOff, AlertCircle, ArrowLeft, Loader2 } from 'l
 import { useRouter } from 'next/navigation';
 import Waveform from '@/components/Waveform';
 import { useAuth } from '@/lib/auth-context';
-import { addStandupToFirestore } from '@/lib/firestore';
+import { addStandupToFirestore, getRecentStandups } from '@/lib/firestore';
 import { parseTranscript } from '@/lib/transcript-parser';
 import { CallState } from '@/lib/types';
 
@@ -85,9 +85,21 @@ export default function CallPage() {
     setCurrentPill('Syncing Audio...');
 
     try {
+      // 1. Fetch the user's last commitments for memory
+      const lastStandups = await getRecentStandups(user.uid, 1);
+      const lastCommitments = lastStandups.length > 0 ? lastStandups[0].commitments.join(', ') : 'No previous commitments.';
+      const lastDate = lastStandups.length > 0 ? new Date(lastStandups[0].date).toLocaleDateString() : 'None';
+
+      // 2. Dynamic import & start session with Dynamic Variables
       const { Conversation } = await import('@elevenlabs/react');
       const conversation = await Conversation.startSession({
         agentId: AGENT_ID,
+        dynamicVariables: {
+          user_name: profile.name.split(' ')[0],
+          last_commitments: lastCommitments,
+          last_date: lastDate,
+          current_date: new Date().toLocaleDateString()
+        },
         onConnect: () => {
           setCallState((prev) => ({ ...prev, status: 'active', startTime: Date.now() }));
           setCurrentPill("Yesterday's work");
@@ -95,11 +107,28 @@ export default function CallPage() {
         onDisconnect: () => handleEndCall(),
         onMessage: (message: { message: string; source: string }) => {
           setTranscript((prev) => [...prev, `${message.source === 'ai' ? 'Drill' : profile.name}: ${message.message}`]);
+          
           if (message.source === 'ai') {
             const msg = message.message.toLowerCase();
+            
+            // Topic Detection
             if (msg.includes('yesterday')) setCurrentPill("Yesterday's work");
             else if (msg.includes('today')) setCurrentPill("Today's plan");
             else if (msg.includes('block')) setCurrentPill('Blockers');
+            
+            // SMART TERMINATION: Detect natural goodbyes
+            if (
+              msg.includes('tomorrow') || 
+              msg.includes('disconnecting') || 
+              msg.includes('meet tomorrow') || 
+              msg.includes('good luck') ||
+              msg.includes('talk then')
+            ) {
+              // Wait 2-3 seconds for the AI to finish speaking the last sentence
+              setTimeout(() => {
+                handleEndCall();
+              }, 3000);
+            }
           }
         },
         onModeChange: (mode: { mode: string }) => {
